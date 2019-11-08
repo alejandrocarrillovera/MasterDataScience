@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1571855091870.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2444021573",
+    "id" : "384513A3",
+    "lastKnownWriteTime" : 1571857621,
+    "last_content_update" : 1571857621547,
+    "path" : "C:/Users/alexi/Desktop/Proyectos en R/Shiny3/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "21,22",
+        "scrollLine" : "10"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

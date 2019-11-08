@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1569335752553.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C5F98BD4",
+    "lastKnownWriteTime" : 2459013921659036276,
+    "last_content_update" : 1569335752553,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "453B1778",
+        "caption" : "notas_alumnos",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=notas_alumnos&cache_key=453B1778",
+        "displayedObservations" : 5,
+        "environment" : "",
+        "expression" : "notas_alumnos",
+        "object" : "notas_alumnos",
+        "preview" : 0,
+        "totalObservations" : 5,
+        "variables" : 3
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

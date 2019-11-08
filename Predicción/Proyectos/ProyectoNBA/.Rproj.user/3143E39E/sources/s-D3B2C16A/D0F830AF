@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1570726572310.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D0F830AF",
+    "lastKnownWriteTime" : 1570742242,
+    "last_content_update" : 1570742242146,
+    "path" : "C:/Users/alexi/Desktop/Proyectos en R/ProyectoNBA/Prueba 1.Rmd",
+    "project_path" : "Prueba 1.Rmd",
+    "properties" : {
+        "cursorPosition" : "180,0",
+        "scrollLine" : "167",
+        "tempName" : "Untitled2"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,180 @@
+---
+title: "Proyecto NBA"
+author: "Alejandro Carrillo Vera"
+date: "10/10/2019"
+output: pdf_document
+---
+
+```{r}
+#Cargamos la base de datos de los jugadores de la NBA
+library(readr)
+library(tidyverse)
+library(MASS)
+library(TeachingDemos)
+library (leaps)
+library(ISLR)
+library(car)
+nba <- read_csv("nba.csv")
+
+#Vamos a renombrar todas las variables para estudiarlas más fácil
+nba<- rename(nba,Jugador=Player)
+nba<- rename(nba,Salario=Salary)
+nba<- rename(nba,Pais=NBA_Country)
+nba<- rename(nba,Draft=NBA_DraftNumber)
+nba<- rename(nba,Edad=Age)
+nba<- rename(nba,Equipo=Tm)
+nba<- rename(nba,Partidos=G)
+nba<- rename(nba,Minutos_jugados=MP)
+nba<- rename(nba,Eficiencia=PER)
+nba<- rename(nba,Exito="TS%")
+nba<- rename(nba,Triples="3PAr")
+nba<- rename(nba,Tiros_Libres=FTr)
+nba<- rename(nba,Reb_Atq="ORB%")
+nba<- rename(nba,Reb_Def="DRB%")
+nba<- rename(nba,Reb_Total="TRB%")
+nba<- rename(nba,Asistencias="AST%")
+nba<- rename(nba,Robos="STL%")
+nba<- rename(nba,Bloqueos="BLK%")
+nba<- rename(nba,Porc_perdidas="TOV%")
+nba<- rename(nba,Porc_participacion="USG%")
+nba<- rename(nba,Buen_Atq=OWS)
+nba<- rename(nba,Buen_Def=DWS)
+nba<- rename(nba,Buen_Tot=WS)
+nba<- rename(nba,Buen_Tot_48="WS/48")
+nba<- rename(nba,Calidad_Atq=OBPM)
+nba<- rename(nba,Calidad_Def=DBPM)
+#Omitimos los NAs
+nba<- na.omit(nba)
+#Tenemos que responder a la pregunta, ¿cuánta relación hay entre los datos de los jugadores y sus salarios?
+#Para ello asignamos como variable dependiente al salario
+vec_y<- nba$Salario
+mat_x<- cbind(1,nba[,2:28])
+
+head(vec_y)
+head.matrix(mat_x)
+#Vamos a realizar una selección a través del metodo de Forward Stepwise quitandole las variables Jugador y Pais
+#ya que no las encuentro relevantes
+
+regfit.full=regsubsets(Salario ~ .-Jugador-Pais,nba, method = "forward")
+summary(regfit.full)
+#Una vez hecho esto me salen 8 modelos con distintas variables en cada uno.
+#Voy a comparar estos modelos para ver cuales de ellos tienen menos BIC
+summary(regfit.full)$bic
+#Me quedo con 4 de los 8 modelos ya que estos tienen el BIC menor:
+
+modelo1 <- lm(Salario~ Draft+Edad+Partidos+Buen_Tot,data=nba)
+modelo2 <- lm(Salario~Draft+Edad+Partidos+Minutos_jugados+Buen_Tot,data=nba)
+modelo3 <- lm(Salario~Draft+Edad+Partidos+Minutos_jugados+Reb_Def+Buen_Tot,data=nba)
+modelo4 <- lm(Salario~Draft+Edad+Equipo+Partidos+Minutos_jugados+Reb_Def+Buen_Tot,data=nba)
+
+#Estos son los 4 modelos que mejor explican la variable salario, para todos ellos es común las variables
+#Draft,Edad,Partidos y Buen_Tot
+#Vamos a realizar una serie de test para estudiar estos modelos
+
+###Test de normalidad###
+residplot <- function(fit, nbreaks=10) {
+  z <- rstudent(fit)
+  hist(z, breaks=nbreaks, freq=FALSE,
+       xlab="Studentized Residual",
+       main="Distribution of Errors")
+  rug(jitter(z), col="brown")
+  curve(dnorm(x, mean=mean(z), sd=sd(z)),
+        add=TRUE, col="blue", lwd=2)
+  lines(density(z)$x, density(z)$y,
+        col="red", lwd=2, lty=2)
+  legend("topright",
+         legend = c( "Normal Curve", "Kernel Density Curve"),
+         lty=1:2, col=c("blue","red"), cex=.7)
+}
+#Modelo1
+n_modelo1 <- qqPlot(modelo1, labels=row.names(nba), id.method="identify",
+       simulate=TRUE, main="Q-Q Plot")
+
+residplot1 <- residplot(modelo1)
+
+#Modelo2
+n_modelo2 <- qqPlot(modelo2, labels=row.names(nba), id.method="identify",
+                    simulate=TRUE, main="Q-Q Plot")
+
+residplot2 <- residplot(modelo2)
+#Modelo3
+n_modelo3 <- qqPlot(modelo3, labels=row.names(nba), id.method="identify",
+                    simulate=TRUE, main="Q-Q Plot")
+
+residplot3 <- residplot(modelo3)
+#Modelo4
+n_modelo4 <- qqPlot(modelo4, labels=row.names(nba), id.method="identify",
+                    simulate=TRUE, main="Q-Q Plot")
+
+residplot4 <- residplot(modelo4)
+#Podemos concluir en que nuestros 4 modelos siguen una distribución normal
+#al igual que sus errores
+
+###Linealidad###
+#Modelo1
+lin_mod1 <- crPlots(modelo1)
+#Modelo2
+lin_mod2 <- crPlots(modelo2)
+#Modelo3
+lin_mod3 <- crPlots(modelo3)
+#Modelo3
+lin_mod4 <- crPlots(modelo4)
+#En general las varibales son todas lineales menos la variable equipo del cuarto modelo ya que 
+#Son los nombres de los equipos y no tienen valores numericos
+
+###Homocedasticidad###
+#Modelo1
+hom_mod1 <- spreadLevelPlot(modelo1)
+#Modelo2
+hom_mod2 <- spreadLevelPlot(modelo2)
+#Modelo3
+hom_mod3 <- spreadLevelPlot(modelo3)
+#Modelo3
+hom_mod4 <- spreadLevelPlot(modelo4)
+#Conforme recorremos los modelos, las gráficas tienen más pendiente, por lo que el
+#primer modelo es más homocedástico que el cuarto esto tiene que ver con que desde el 
+#modelo 1 al 4 estamos añadiendo variables
+
+################################################################################################################
+
+#Ahora vamos a hacer un Cross Validation para ver que modelo predice mejor
+#Para el modelo 1
+set.seed(250)
+numData=nrow(nba)
+train=sample(numData ,numData/2)
+
+regres.train =lm(Salario~ Draft+Edad+Partidos+Buen_Tot,nba ,subset =train )
+attach(nba)
+mean((Salario-predict(regres.train ,Auto))[-train ]^2)
+detach(nba)
+sqrt(2.725836e+13)
+#El error cuadrático medio para el modelo 1 es de 2.725836e+13, el error es de 5.220.954 millones
+
+#Para el modelo 2
+regres.train2 =lm(Salario~Draft+Edad+Partidos+Minutos_jugados+Buen_Tot,nba ,subset =train )
+attach(nba)
+mean((Salario-predict(regres.train2 ,Auto))[-train ]^2)
+detach(nba)
+sqrt(2.430289e+13)
+#El error cuadrático medio para el modelo 2 es de 2.430289e+13, el error es de 4.929.796 millones
+
+#Para el modelo 3
+regres.train3 =lm(Salario~Draft+Edad+Partidos+Minutos_jugados+Reb_Def+Buen_Tot,nba,subset =train )
+attach(nba)
+mean((Salario-predict(regres.train3 ,Auto))[-train ]^2)
+detach(nba)
+sqrt(2.420056e+13)
+#El error cuadrático medio para el modelo 3 es de 2.420056e+13, el error es de 4.919.406 millones
+
+#Para el modelo 4
+regres.train4 =lm(Salario~Draft+Edad+Equipo+Partidos+Minutos_jugados+Reb_Def+Buen_Tot,nba,subset =train )
+attach(nba)
+mean((Salario-predict(regres.train4 ,Auto))[-train ]^2)
+detach(nba)
+#El error cuadrático medio para el modelo 4 es de 2.767676e+13, el error es de 5.260.871 millones
+sqrt(2.767676e+13)
+#Como podemos ver el modelo que mejor predice es el modelo 3 ya que tiene el error mas pequeño
+#En este caso nuestro error es de 4.919.406 millones de dolares
+#Las variables que mejor explican el salario serían la posición en el Draft, la edad el jugador,los partidos que ha jugado
+#los minutos jugados, los rebotes en defensa y que haya contribuido de forma notable en total con el equipo
+```

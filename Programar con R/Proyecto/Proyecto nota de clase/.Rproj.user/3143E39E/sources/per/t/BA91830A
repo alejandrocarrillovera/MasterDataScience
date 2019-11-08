@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1569255848729.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2888765875",
+    "id" : "BA91830A",
+    "lastKnownWriteTime" : 1569336783,
+    "last_content_update" : 1569336783331,
+    "path" : "C:/Users/alexi/Desktop/Proyectos en R/Proyecto nota de clase/notaclasescrypt.R",
+    "project_path" : "notaclasescrypt.R",
+    "properties" : {
+        "cursorPosition" : "13,5",
+        "scrollLine" : "6",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

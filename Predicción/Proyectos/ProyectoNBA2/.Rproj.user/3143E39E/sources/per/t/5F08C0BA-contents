@@ -1,0 +1,25 @@
+Probabilidad <- function (n,c,e) {
+  la <- 6
+  mu <- 2
+  a <- 0
+  for (i in (1:(c+e))) {
+    if (i <=c) {
+      a <- a + (((la/mu)^i)/factorial(i))
+    }
+    else{
+      a <- a + (((la/mu)^i)/(factorial(c)*c^(i-c)))
+    }
+  }
+  p0 <- 1/(1+a) 
+  if (n <=c){
+    return((((la/mu)^n)/factorial(n))*p0)
+  }
+  else {
+    return(((la/mu)^n)/(factorial(c)*c^(n-c))*p0)
+  }
+}
+
+Probabilidad_todos <-for(i in 0:8) {
+  print(Probabilidad(i,5,3))
+}
+

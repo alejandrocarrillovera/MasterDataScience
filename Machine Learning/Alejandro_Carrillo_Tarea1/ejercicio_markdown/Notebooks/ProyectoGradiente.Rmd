@@ -1,0 +1,241 @@
+---
+title: "Proyecto Gradiente"
+author: "Alejandro Carrillo Vera"
+date: "6/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Cargamos librerías
+
+```{r}
+
+library(readr)
+library(ISLR)
+library(MASS)
+library(dplyr)
+library(tidyverse)
+library(skimr)
+
+```
+
+## Cargamos los datos y hacemos un análisis exploratorio de nuestra muestra
+
+```{r}
+X4_1_data <- read_csv("C:/Users/alexi/Desktop/Proyectos en R/Gradiente/4_1_data.csv")
+```
+
+Tenemos una muestra formada por 3 variables con un total de 100 observaciones.
+Las características de las variables son:
+
+- label: 1 si ha pasado la prueba y es admitido, y 0, no ha pasado la prueba por lo que no es admitido.
+
+- score1: notas de la primera parte de la prueba
+
+
+- score2: notas de la segunda parte de la prueba
+
+Nuestro objetivo es realizar un análisis de regresión logística donde la variable dependiente es "label" y las explicativas son "score 1" y "score 2"
+
+```{r}
+#Vamos a cambiar el nombre de las variables para hacerlas más fácil de utilizar, ya que en la base de datos original tienen guiones
+
+data <- X4_1_data
+data <- rename(data,"score.1" = `score-1`)
+data <- rename(data,"score.2" = `score-2`)
+
+#Hacemos un summary para estudiar mejor los datos y variables
+skim(data)
+
+```
+
+```{r}
+#Dibujamos el gráfico de dispersión de las variables explicativas y un histograma de la variable dependiente.
+plot(data$score.1, data$score.2, col = as.factor(data$label), xlab = "Score 1", ylab = "Score 2")
+
+hist(data$label)
+```
+
+## Ejercicio 1
+
+## Creamos datos de entrenamiento y de test
+
+```{r}
+#Seleccionamos una semilla y tomamos una muestra de training y otra de test, siendo el 70% de la muestra el training y 30% el test
+set.seed(06112019)
+n <- nrow(data)
+id.train <- sample(1:n, 0.70*n) 
+data.train <- data[id.train,]
+data.test <- data[-id.train,]
+
+```
+
+```{r}
+
+# Train
+x.train <- data.frame(rep(1,70), data.train$score.1, data.train$score.2) 
+x <- as.matrix(x.train) 
+y <- as.matrix(data.train$label)
+
+
+# Test
+x.test <- data.frame(rep(1,30), data.test$score.1, data.test$score.2) 
+x.test <- as.matrix(x.test) 
+y.test <- as.matrix(data.test$label)
+
+```
+
+Defino la función sigmoide:
+
+```{r}
+
+sigmoide <- function(x) 
+  1 / (1 + exp(-x))
+
+```
+
+#Función de costes
+
+La función de costes es la función que queremos minimizar reduciendo su valor.
+En nuestro caso muestra los errores que se cometen al estimar la variable "label".
+Nuestro objetivo por tanto, es encontrar los valores óptimos de los betas que minimicen mi función de costes
+
+```{r}
+
+funcion.costes <- function(parametros, x, y) {
+  n <- nrow(x)
+  g <- sigmoide(x %*% parametros)
+  j <- (1/n) * sum((- y * log(g)) - ((1 - y) * log(1 - g)))
+  return(j)
+}
+
+```
+
+Nuestro objetivo es reducir el coste inicial, que se calcula tomando el valor inicial de nuestros parámetros betas.
+
+```{r}
+parametros <- rep(0, ncol(x))
+
+# Coste máximo
+
+coste.inicial = funcion.costes(parametros, x, y)
+coste.inicial
+
+
+```
+
+Calculamos el número óptimo de iteraciones, para eso creamos una función que obtenga nuestros parámetros óptimos
+
+```{r}
+
+TestGradientDescent <- function(iterations = 1000, x, y) {
+  parametros <- rep(0, ncol(x))
+  parametros.optimos <- optim(par = parametros,     fn = funcion.costes, x = x, y = y, 
+  control = list(maxit = iterations))
+  parametros <- parametros.optimos$par
+ return(parametros) 
+}
+
+```
+
+Utilizamos la función que acabamos de crear con nuestros datos
+```{r}
+
+parametros.optimos <- TestGradientDescent(x = x, y = y)
+parametros.optimos
+prob <- sigmoide((x.test %*% parametros.optimos)) 
+prob
+
+```
+Realizamos el cut off
+
+```{r}
+
+prob[abs(prob - 1) < abs(prob - 0)] <- 1
+prob[abs(prob - 1) >= abs(prob - 0)] <- 0
+y.test
+```
+Por último creamos el objetivo de este primer apartado que es la matriz de confusión y calculamos el accuracy
+
+```{r}
+
+#Matriz de confusión
+
+table(y.test, prob, dnn = c("Real", "Predicción"))
+
+```
+
+```{r}
+
+accuracy <- 100*sum(diag(table(y.test, prob)))/sum(table(y.test, prob)) 
+accuracy
+
+```
+
+
+##Ejercicio 2
+## Iteraciones individuales
+
+
+
+```{r}
+#Creamos un mapa de puntos de las iteraciones para poder representar como influyen las iteraciones en la funcion de costes y en el número óptimo de parámetros
+
+TestGradientDescent <- function(iterations = 1000, x, y) {
+  parametros <- rep(0, ncol(x))
+  errores <- NULL
+  for (iteracion in 1:iterations) {
+    parametros.optimos <- optim(par = parametros, fn = funcion.costes, x = x, y = y, control = list(maxit = iteracion))
+errores[iteracion] <- parametros.optimos$value
+  }
+ return(errores) 
+}
+
+eje.y <- TestGradientDescent(400, x = x.test, y = y.test)
+eje.x <- 1:400
+
+plot(x = eje.x, y = eje.y)
+
+```
+
+#Ejercicio 3
+
+## Explorar la función "Optium"
+
+```{r}
+
+#Vemos qué argumentos tiene esta función
+args(optim)
+
+# Existen diversos métodos para optimizar la función y su convergencia usando la funcion "optim". Vamos a utilizar la función BFGS
+
+# En la salida de la función se explica si han convergido 0 o no 1
+
+```
+
+Exploraremos ahora el método BFGS:
+
+Hace uso tanto del gradiente como de una aproximación a la inversa de la matriz hessiana de la función, esto para hacer una aproximación al cálculo de la segunda derivada. Tiene el problema de que es costoso computacionalmente para funciones de muchas variables. Es adecuado para funciones no lineales de varias variables.
+
+```{r}
+
+parametros.optimos_1 <- optim(par = parametros, fn = funcion.costes, x = x, y = y, method = "BFGS",lower=-Inf,upper=Inf,control = list(maxit = 60), hessian=TRUE) 
+
+parametros.optimos_1
+
+```
+Con la matriz hessiana podemos comprobar que el gradiente es descendente viendo si la función es cóncava o convexa:
+Siendo convexa si la matriz hessiana es positiva
+Siendo cóncava si la matriz hessiana es negativa
+Además, podemos ver si tiene algún máximo o un mínimo.
+
+Vamos a ver el determinante:
+```{r}
+hessiana <- parametros.optimos_1$hessian
+
+det(hessiana)
+```
+

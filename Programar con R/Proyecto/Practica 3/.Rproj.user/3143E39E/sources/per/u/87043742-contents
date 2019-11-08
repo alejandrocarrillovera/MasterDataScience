@@ -1,0 +1,4 @@
+library("markovchain")
+estados<-c("soleado","nublado","lluvioso")
+byRow<-TRUE
+mt<-matrix()

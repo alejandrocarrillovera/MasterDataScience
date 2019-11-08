@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1571252995267.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2910208004",
+    "id" : "F533E0DF",
+    "lastKnownWriteTime" : 1571253200,
+    "last_content_update" : 1571253200393,
+    "path" : "C:/Users/alexi/Desktop/Proyectos en R/Proyecto SHINY/server.r",
+    "project_path" : "server.r",
+    "properties" : {
+        "cursorPosition" : "4,2",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1569346646891.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1591419596",
+    "id" : "668EBE6D",
+    "lastKnownWriteTime" : 1569351975,
+    "last_content_update" : 1569351975917,
+    "path" : "C:/Users/alexi/Desktop/Proyectos en R/Proyecto ontario/Proyecto Ontario/Proyecto Ontario.R",
+    "project_path" : "Proyecto Ontario.R",
+    "properties" : {
+        "cursorPosition" : "7,0",
+        "notebook_format" : "html_document",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

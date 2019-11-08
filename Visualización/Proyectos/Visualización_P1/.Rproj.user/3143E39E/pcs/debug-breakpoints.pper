@@ -1,0 +1,96 @@
+{
+    "debugBreakpointsState" : {
+        "breakpoints" : [
+            {
+                "editor_line_number" : 8,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 0,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 8,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "C:/Users/alexi/Desktop/Proyectos en R/Visualización_P1/apartado2.R",
+                "state" : 1,
+                "type" : 1
+            },
+            {
+                "editor_line_number" : 7,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 1,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 7,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "C:/Users/alexi/Desktop/Proyectos en R/Visualización_P1/apartado2.R",
+                "state" : 1,
+                "type" : 1
+            },
+            {
+                "editor_line_number" : 6,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 2,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 6,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "C:/Users/alexi/Desktop/Proyectos en R/Visualización_P1/apartado2.R",
+                "state" : 1,
+                "type" : 1
+            },
+            {
+                "editor_line_number" : 5,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 3,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 5,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "C:/Users/alexi/Desktop/Proyectos en R/Visualización_P1/apartado2.R",
+                "state" : 1,
+                "type" : 1
+            },
+            {
+                "editor_line_number" : 4,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 4,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 4,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "C:/Users/alexi/Desktop/Proyectos en R/Visualización_P1/apartado2.R",
+                "state" : 1,
+                "type" : 1
+            },
+            {
+                "editor_line_number" : 3,
+                "editor_state" : 1,
+                "function_name" : "toplevel",
+                "function_steps" : "",
+                "id" : 5,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : false,
+                "line_number" : 3,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "C:/Users/alexi/Desktop/Proyectos en R/Visualización_P1/apartado2.R",
+                "state" : 1,
+                "type" : 1
+            }
+        ]
+    }
+}
