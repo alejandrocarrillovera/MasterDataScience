@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Cointegración | Modelos Series Temporales III</title>
+  <meta name="description" content="3 Cointegración | Modelos Series Temporales III" />
+  <meta name="generator" content="bookdown 0.15 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Cointegración | Modelos Series Temporales III" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Cointegración | Modelos Series Temporales III" />
+  
+  
+  
+
+<meta name="author" content="© Ricardo A. Queralt" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="modelos-var.html"/>
+<link rel="next" href="cambio-de-regimen-hidden-markov-models-regime-switching.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Modelos GARCH</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#bibliografía"><i class="fa fa-check"></i><b>1.1</b> Bibliografía</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#introducción"><i class="fa fa-check"></i><b>1.2</b> Introducción</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#volatilidad-hechos-característicos1"><i class="fa fa-check"></i><b>1.3</b> Volatilidad: Hechos Característicos</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#modelos-garch-1"><i class="fa fa-check"></i><b>1.4</b> Modelos GARCH</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="index.html"><a href="index.html#definición-modelo-garch"><i class="fa fa-check"></i><b>1.4.1</b> Definición Modelo GARCH</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#identificación-y-diagnosis"><i class="fa fa-check"></i><b>1.5</b> Identificación y Diagnosis</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#ejemplo-ibm"><i class="fa fa-check"></i><b>1.6</b> Ejemplo: IBM</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelos-var.html"><a href="modelos-var.html"><i class="fa fa-check"></i><b>2</b> Modelos VAR</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelos-var.html"><a href="modelos-var.html#bibliografía-1"><i class="fa fa-check"></i><b>2.1</b> Bibliografía</a></li>
+<li class="chapter" data-level="2.2" data-path="modelos-var.html"><a href="modelos-var.html#vectores-autorregresivos"><i class="fa fa-check"></i><b>2.2</b> Vectores Autorregresivos</a></li>
+<li class="chapter" data-level="2.3" data-path="modelos-var.html"><a href="modelos-var.html#ejemplo-1"><i class="fa fa-check"></i><b>2.3</b> Ejemplo 1</a></li>
+<li class="chapter" data-level="2.4" data-path="modelos-var.html"><a href="modelos-var.html#ejemplo-2"><i class="fa fa-check"></i><b>2.4</b> Ejemplo 2</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cointegración.html"><a href="cointegración.html"><i class="fa fa-check"></i><b>3</b> Cointegración</a><ul>
+<li class="chapter" data-level="3.1" data-path="cointegración.html"><a href="cointegración.html#procedimiento-de-estimación-ante-series-temporales-no-estacionarias"><i class="fa fa-check"></i><b>3.1</b> PROCEDIMIENTO DE ESTIMACIÓN ANTE SERIES TEMPORALES NO ESTACIONARIAS</a></li>
+<li class="chapter" data-level="3.2" data-path="cointegración.html"><a href="cointegración.html#estimación"><i class="fa fa-check"></i><b>3.2</b> Estimación</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="cointegración.html"><a href="cointegración.html#estacionariedad"><i class="fa fa-check"></i><b>3.2.1</b> Estacionariedad</a></li>
+<li class="chapter" data-level="3.2.2" data-path="cointegración.html"><a href="cointegración.html#pruebas-de-cointegración"><i class="fa fa-check"></i><b>3.2.2</b> Pruebas de Cointegración</a></li>
+<li class="chapter" data-level="3.2.3" data-path="cointegración.html"><a href="cointegración.html#modelo-de-corrección-de-errores.-ecm"><i class="fa fa-check"></i><b>3.2.3</b> Modelo de corrección de errores. (ECM)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="cointegración.html"><a href="cointegración.html#ejemplo-pair-trading"><i class="fa fa-check"></i><b>3.3</b> Ejemplo Pair Trading</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="cambio-de-regimen-hidden-markov-models-regime-switching.html"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html"><i class="fa fa-check"></i><b>4</b> Cambio de Regimen (Hidden Markov Models - Regime switching)</a><ul>
+<li class="chapter" data-level="4.1" data-path="cambio-de-regimen-hidden-markov-models-regime-switching.html"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#ejemplo"><i class="fa fa-check"></i><b>4.1</b> Ejemplo</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelos Series Temporales III</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cointegración" class="section level1">
+<h1><span class="header-section-number">3</span> Cointegración</h1>
+<p>El análisis de series temporales se encuentra con un problema al medir las relaciones entre aquellas variables que tienen una tendencia temporal.</p>
+<p>Este problema puede llegar a que se consideren significativas relaciones completamente espurias.</p>
+<p>Las variables que tienen una tendencia temporal definida se denominan “no estacionarias”.</p>
+<p>Las estimaciones de regresiones con variables no estacionarias son espurias salvo que estas estén cointegradas.</p>
+<p>Dos variables no estacionarias cointegradas son aquellas cuyos residuos son estacionarios.</p>
+<p>Si los residuos son estacionarios las estimaciones de variables no estacionarias son superconsistentes.</p>
+<div id="procedimiento-de-estimación-ante-series-temporales-no-estacionarias" class="section level2">
+<h2><span class="header-section-number">3.1</span> PROCEDIMIENTO DE ESTIMACIÓN ANTE SERIES TEMPORALES NO ESTACIONARIAS</h2>
+<p>El algoritmo de estimación es:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>si las series son estacionarias</p>
+<p>Se estima por los procedimientos habituales (MCO o GLM)</p></li>
+<li><p>si las series son no estacionarias de orden distinto:</p>
+<p>Formalmente se dice que la serie temporal <span class="math inline">\(y_t\)</span> tiene raíz de orden d <span class="math inline">\(y_t \sim I(d)\)</span> cuando <span class="math inline">\(y_t\)</span> se transforma en una serie estacionaria al ser diferenciada d veces.</p>
+<p>Si las series son no estacionarias de orden distinto entre sí, NO puede estimarse la relación entre ambas.</p></li>
+<li><p>si las series son no estacionarias del mismo orden pero no están cointegradas.</p>
+<p>NO puede estimarse la relación entre ambas porque la regresión es espuria.</p>
+<p>Se puede intentar estacionalizar las series (mediante alguna operación, logaritmos o diferencias o ratios con otras variables) o hacer una regresión por primeras diferencias (el resultado nos indicará si la correlación existe o no.</p></li>
+<li><p>si las series son no estacionarias pero están cointegradas</p>
+<p>Se puede pasar la regresión habitual (MCO GLM) para estimar los efectos a largo plazo y el modelo de corrección de errores para estimar los efectos a corto plazo.</p></li>
+</ol>
+</div>
+<div id="estimación" class="section level2">
+<h2><span class="header-section-number">3.2</span> Estimación</h2>
+<p>El método de Engle y Granger tiene tres fases:</p>
+<blockquote>
+<ol style="list-style-type: lower-alpha">
+<li>estimación de la estacionariedad de las series;<br />
+</li>
+<li>pruebas de cointegración y<br />
+</li>
+<li>método de corrección de errores.</li>
+</ol>
+</blockquote>
+<div id="estacionariedad" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Estacionariedad</h3>
+<ol style="list-style-type: lower-alpha">
+<li><p>visual y Correlograma</p></li>
+<li><p>Dickey-Fuller (Dickey-Fuller, 1979, 1984; Said-Dickey 1984) y Dickey-Fuller aumentada.</p></li>
+</ol>
+<p>La H0 es que es no estacionaria (I(1))</p>
+<p>El test puede realizarse en tres versiones sin constante ni tendencia o con alguna de las dos. PERO ES ACONSEJABLE HACERLO SIEMPRE UTILIZANDO LA TENDENCIA, PARA CORREGIR ESTE EFECTO SI EXISTE</p>
+</div>
+<div id="pruebas-de-cointegración" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Pruebas de Cointegración</h3>
+<p>Supongamos que dos variables temporales <span class="math inline">\(x_t\)</span> e <span class="math inline">\(y_t\)</span> son estacionarias de orden 1 (es decir son I(1)).
+Se dice que dichas variables están cointegradas cuando puede practicarse una regresión linealy los errores son I(0):
+<span class="math display">\[
+y_t = a + bx_t + u_t
+\]</span></p>
+</div>
+<div id="modelo-de-corrección-de-errores.-ecm" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> Modelo de corrección de errores. (ECM)</h3>
+<p>Como una extensión del modelo, si las variables están cointegradas se pueden utilizar los residuos para corregir los errores y estimar también los efectos a corto plazo.
+El modelo a estimar se denomina de corrección de errores y su especificación es:
+<span class="math display">\[
+y_t-y_{t-1} = \beta (x_t–x_{t-1}) + \gamma (y_{t-1} – a – b x_{t-1}) + \epsilon_t
+\]</span>
+Donde
+<span class="math display">\[
+\text{Modelo de Corrección de Error es:}\\
+\gamma (y_{t-1} – a – b x_{t-1}) = \gamma u_{t-1}
+\]</span>
+es el mecanismo de corrección, <span class="math inline">\(b\)</span> es la influencia a largo plazo de x sobre y, <span class="math inline">\(\beta\)</span> es la estimación de la influencia, a corto plazo de x sobre y.</p>
+<p>El modelo también suele escribirse:
+<span class="math display">\[
+\Delta y_t = \beta (\Delta x_t) + \gamma (u_{t-1}) + \epsilon_t
+\]</span></p>
+</div>
+</div>
+<div id="ejemplo-pair-trading" class="section level2">
+<h2><span class="header-section-number">3.3</span> Ejemplo Pair Trading</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="cointegración.html#cb6-1"></a><span class="kw">require</span>(devtools)</span>
+<span id="cb6-2"><a href="cointegración.html#cb6-2"></a><span class="kw">install_version</span>(<span class="st">&quot;PairTrading&quot;</span>, <span class="dt">version =</span> <span class="st">&quot;1.1&quot;</span>, <span class="dt">repos =</span> <span class="st">&quot;http://cran.us.r-project.org&quot;</span>)</span>
+<span id="cb6-3"><a href="cointegración.html#cb6-3"></a><span class="kw">library</span>(PairTrading)</span>
+<span id="cb6-4"><a href="cointegración.html#cb6-4"></a><span class="co">#load library</span></span>
+<span id="cb6-5"><a href="cointegración.html#cb6-5"></a></span>
+<span id="cb6-6"><a href="cointegración.html#cb6-6"></a><span class="kw">library</span>(PairTrading)</span>
+<span id="cb6-7"><a href="cointegración.html#cb6-7"></a></span>
+<span id="cb6-8"><a href="cointegración.html#cb6-8"></a><span class="co">#load sample stock price data</span></span>
+<span id="cb6-9"><a href="cointegración.html#cb6-9"></a><span class="kw">data</span>(stock.price)</span>
+<span id="cb6-10"><a href="cointegración.html#cb6-10"></a></span>
+<span id="cb6-11"><a href="cointegración.html#cb6-11"></a></span>
+<span id="cb6-12"><a href="cointegración.html#cb6-12"></a><span class="co">#select 2 stocks</span></span>
+<span id="cb6-13"><a href="cointegración.html#cb6-13"></a>price.pair &lt;-<span class="st"> </span>stock.price[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>][<span class="st">&quot;2008-12-31::&quot;</span>]</span>
+<span id="cb6-14"><a href="cointegración.html#cb6-14"></a></span>
+<span id="cb6-15"><a href="cointegración.html#cb6-15"></a><span class="kw">adf.test</span>(price.pair[,<span class="dv">1</span>],<span class="dt">k=</span><span class="dv">0</span>)</span>
+<span id="cb6-16"><a href="cointegración.html#cb6-16"></a><span class="kw">adf.test</span>(price.pair[,<span class="dv">2</span>],<span class="dt">k=</span><span class="dv">0</span>)</span>
+<span id="cb6-17"><a href="cointegración.html#cb6-17"></a></span>
+<span id="cb6-18"><a href="cointegración.html#cb6-18"></a><span class="kw">adf.test</span>(price.pair[,<span class="dv">1</span>],<span class="dt">k=</span><span class="dv">6</span>)</span>
+<span id="cb6-19"><a href="cointegración.html#cb6-19"></a>adf.test</span>
+<span id="cb6-20"><a href="cointegración.html#cb6-20"></a></span>
+<span id="cb6-21"><a href="cointegración.html#cb6-21"></a><span class="kw">library</span>(urca)</span>
+<span id="cb6-22"><a href="cointegración.html#cb6-22"></a>test_<span class="dv">1</span>&lt;-<span class="kw">ur.df</span>(price.pair[,<span class="dv">1</span>],<span class="dt">type=</span><span class="st">&quot;none&quot;</span>,<span class="dt">selectlags=</span><span class="st">&quot;AIC&quot;</span>,<span class="dt">lags=</span><span class="dv">10</span>)</span>
+<span id="cb6-23"><a href="cointegración.html#cb6-23"></a><span class="kw">summary</span>(test_<span class="dv">1</span>)</span>
+<span id="cb6-24"><a href="cointegración.html#cb6-24"></a></span>
+<span id="cb6-25"><a href="cointegración.html#cb6-25"></a>test_<span class="dv">2</span>&lt;-<span class="kw">ur.df</span>(price.pair[,<span class="dv">1</span>],<span class="dt">type=</span><span class="st">&quot;trend&quot;</span>,<span class="dt">selectlags=</span><span class="st">&quot;AIC&quot;</span>,<span class="dt">lags=</span><span class="dv">10</span>)</span>
+<span id="cb6-26"><a href="cointegración.html#cb6-26"></a><span class="kw">summary</span>(test_<span class="dv">2</span>)</span>
+<span id="cb6-27"><a href="cointegración.html#cb6-27"></a></span>
+<span id="cb6-28"><a href="cointegración.html#cb6-28"></a><span class="co">#Estimate parameters &amp; plot spread</span></span>
+<span id="cb6-29"><a href="cointegración.html#cb6-29"></a>reg &lt;-<span class="st"> </span><span class="kw">EstimateParameters</span>(price.pair, <span class="dt">method =</span> lm)</span>
+<span id="cb6-30"><a href="cointegración.html#cb6-30"></a><span class="kw">str</span>(reg)</span>
+<span id="cb6-31"><a href="cointegración.html#cb6-31"></a><span class="kw">plot</span>(reg<span class="op">$</span>spread)</span>
+<span id="cb6-32"><a href="cointegración.html#cb6-32"></a></span>
+<span id="cb6-33"><a href="cointegración.html#cb6-33"></a><span class="co">#check stationarity</span></span>
+<span id="cb6-34"><a href="cointegración.html#cb6-34"></a><span class="kw">IsStationary</span>(reg<span class="op">$</span>spread, <span class="fl">0.1</span>)</span>
+<span id="cb6-35"><a href="cointegración.html#cb6-35"></a></span>
+<span id="cb6-36"><a href="cointegración.html#cb6-36"></a><span class="co">#estimate parameters for back test</span></span>
+<span id="cb6-37"><a href="cointegración.html#cb6-37"></a>params &lt;-<span class="st"> </span><span class="kw">EstimateParametersHistorically</span>(price.pair, <span class="dt">period =</span> <span class="dv">180</span>)</span>
+<span id="cb6-38"><a href="cointegración.html#cb6-38"></a></span>
+<span id="cb6-39"><a href="cointegración.html#cb6-39"></a><span class="co">#create &amp; plot trading signals</span></span>
+<span id="cb6-40"><a href="cointegración.html#cb6-40"></a>signal &lt;-<span class="st"> </span><span class="kw">Simple</span>(params<span class="op">$</span>spread, <span class="fl">0.05</span>)</span>
+<span id="cb6-41"><a href="cointegración.html#cb6-41"></a><span class="kw">barplot</span>(signal,<span class="dt">col=</span><span class="st">&quot;blue&quot;</span>,<span class="dt">space =</span> <span class="dv">0</span>, <span class="dt">border =</span> <span class="st">&quot;blue&quot;</span>,<span class="dt">xaxt=</span><span class="st">&quot;n&quot;</span>,<span class="dt">yaxt=</span><span class="st">&quot;n&quot;</span>,<span class="dt">xlab=</span><span class="st">&quot;&quot;</span>,<span class="dt">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb6-42"><a href="cointegración.html#cb6-42"></a><span class="kw">par</span>(<span class="dt">new=</span><span class="ot">TRUE</span>)</span>
+<span id="cb6-43"><a href="cointegración.html#cb6-43"></a><span class="kw">plot</span>(params<span class="op">$</span>spread)</span>
+<span id="cb6-44"><a href="cointegración.html#cb6-44"></a></span>
+<span id="cb6-45"><a href="cointegración.html#cb6-45"></a><span class="co">#Performance of pair trading</span></span>
+<span id="cb6-46"><a href="cointegración.html#cb6-46"></a>return.pairtrading &lt;-<span class="st"> </span><span class="kw">Return</span>(price.pair, <span class="kw">lag</span>(signal), <span class="kw">lag</span>(params<span class="op">$</span>hedge.ratio))</span>
+<span id="cb6-47"><a href="cointegración.html#cb6-47"></a><span class="kw">plot</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>return.pairtrading))</span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="modelos-var.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="cambio-de-regimen-hidden-markov-models-regime-switching.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

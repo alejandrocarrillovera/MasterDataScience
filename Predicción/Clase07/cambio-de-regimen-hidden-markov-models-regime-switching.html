@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Cambio de Regimen (Hidden Markov Models - Regime switching) | Modelos Series Temporales III</title>
+  <meta name="description" content="4 Cambio de Regimen (Hidden Markov Models - Regime switching) | Modelos Series Temporales III" />
+  <meta name="generator" content="bookdown 0.15 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Cambio de Regimen (Hidden Markov Models - Regime switching) | Modelos Series Temporales III" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Cambio de Regimen (Hidden Markov Models - Regime switching) | Modelos Series Temporales III" />
+  
+  
+  
+
+<meta name="author" content="© Ricardo A. Queralt" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="cointegración.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Modelos GARCH</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#bibliografía"><i class="fa fa-check"></i><b>1.1</b> Bibliografía</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#introducción"><i class="fa fa-check"></i><b>1.2</b> Introducción</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#volatilidad-hechos-característicos1"><i class="fa fa-check"></i><b>1.3</b> Volatilidad: Hechos Característicos</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#modelos-garch-1"><i class="fa fa-check"></i><b>1.4</b> Modelos GARCH</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="index.html"><a href="index.html#definición-modelo-garch"><i class="fa fa-check"></i><b>1.4.1</b> Definición Modelo GARCH</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#identificación-y-diagnosis"><i class="fa fa-check"></i><b>1.5</b> Identificación y Diagnosis</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#ejemplo-ibm"><i class="fa fa-check"></i><b>1.6</b> Ejemplo: IBM</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelos-var.html"><a href="modelos-var.html"><i class="fa fa-check"></i><b>2</b> Modelos VAR</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelos-var.html"><a href="modelos-var.html#bibliografía-1"><i class="fa fa-check"></i><b>2.1</b> Bibliografía</a></li>
+<li class="chapter" data-level="2.2" data-path="modelos-var.html"><a href="modelos-var.html#vectores-autorregresivos"><i class="fa fa-check"></i><b>2.2</b> Vectores Autorregresivos</a></li>
+<li class="chapter" data-level="2.3" data-path="modelos-var.html"><a href="modelos-var.html#ejemplo-1"><i class="fa fa-check"></i><b>2.3</b> Ejemplo 1</a></li>
+<li class="chapter" data-level="2.4" data-path="modelos-var.html"><a href="modelos-var.html#ejemplo-2"><i class="fa fa-check"></i><b>2.4</b> Ejemplo 2</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cointegración.html"><a href="cointegración.html"><i class="fa fa-check"></i><b>3</b> Cointegración</a><ul>
+<li class="chapter" data-level="3.1" data-path="cointegración.html"><a href="cointegración.html#procedimiento-de-estimación-ante-series-temporales-no-estacionarias"><i class="fa fa-check"></i><b>3.1</b> PROCEDIMIENTO DE ESTIMACIÓN ANTE SERIES TEMPORALES NO ESTACIONARIAS</a></li>
+<li class="chapter" data-level="3.2" data-path="cointegración.html"><a href="cointegración.html#estimación"><i class="fa fa-check"></i><b>3.2</b> Estimación</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="cointegración.html"><a href="cointegración.html#estacionariedad"><i class="fa fa-check"></i><b>3.2.1</b> Estacionariedad</a></li>
+<li class="chapter" data-level="3.2.2" data-path="cointegración.html"><a href="cointegración.html#pruebas-de-cointegración"><i class="fa fa-check"></i><b>3.2.2</b> Pruebas de Cointegración</a></li>
+<li class="chapter" data-level="3.2.3" data-path="cointegración.html"><a href="cointegración.html#modelo-de-corrección-de-errores.-ecm"><i class="fa fa-check"></i><b>3.2.3</b> Modelo de corrección de errores. (ECM)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="cointegración.html"><a href="cointegración.html#ejemplo-pair-trading"><i class="fa fa-check"></i><b>3.3</b> Ejemplo Pair Trading</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="cambio-de-regimen-hidden-markov-models-regime-switching.html"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html"><i class="fa fa-check"></i><b>4</b> Cambio de Regimen (Hidden Markov Models - Regime switching)</a><ul>
+<li class="chapter" data-level="4.1" data-path="cambio-de-regimen-hidden-markov-models-regime-switching.html"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#ejemplo"><i class="fa fa-check"></i><b>4.1</b> Ejemplo</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelos Series Temporales III</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cambio-de-regimen-hidden-markov-models---regime-switching" class="section level1">
+<h1><span class="header-section-number">4</span> Cambio de Regimen (Hidden Markov Models - Regime switching)</h1>
+<p><img src="media/gr01.png" /></p>
+<p>Un modelo de cambio de régimen combina dos o más conjuntos de parámetros en un sistema y calcula la verosimilitud de cada régimen en cada momento del tiempo. Definimos un modelo de Markov-Switching de dos estados que permite diferentes medias en el crecimiento:</p>
+<p><span class="math display">\[
+\nabla y_t=\left\{ \begin{array}{cc} \alpha_1 &amp; s(t)=1 \\ \alpha_2 &amp; s(t)=2 \end{array} \right.
+\]</span></p>
+<p>Donde s(t) denota el estado de la variable en el momento t. El estado s(t) se determina por una cadena de Markov, la cual depende asimismo de una matriz de transición. Esta matriz muestra la probabilidad de que un estado particular sea seguido por otro estado particular. Además, las probabilidades de transición se suponen estacionarias en el tiempo.</p>
+<p><span class="math display">\[
+\left[\begin{array}{cc} p_{11} &amp; p_{21} \\ p_{12} &amp; p_{22} \end{array} \right] =
+\left[\begin{array}{cc} p_{11} &amp; 1-p_{22} \\ 1-p_{11} &amp; p_{22} \end{array} \right]
+\]</span>
+Se pueden calcular las probabilidades estacionarias (ergódicas, no condicionadas):</p>
+<p><span class="math display">\[
+\pi=\left[\begin{array}{c} \frac{1-p_{22}}{2-p_{11} - p_{22}} \\ \frac{1-p_{11}}{2-p_{11} - p_{22}} \end{array} \right] \\
+P\{s(t)=1\}=\frac{1-p_{22}}{2-p_{11} - p_{22}}
+\]</span></p>
+<p>La estimación de los modelos se realiza mediante un algoritmo EM de máxima-verosimilitud</p>
+<div id="ejemplo" class="section level2">
+<h2><span class="header-section-number">4.1</span> Ejemplo</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-1"></a><span class="kw">library</span>(depmixS4)</span>
+<span id="cb7-2"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-2"></a><span class="kw">library</span>(TTR)</span>
+<span id="cb7-3"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-3"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb7-4"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-4"></a><span class="kw">library</span>(reshape2)</span>
+<span id="cb7-5"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-5"></a><span class="kw">library</span>(xts)</span>
+<span id="cb7-6"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-6"></a><span class="kw">library</span>(extrafont)</span>
+<span id="cb7-7"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-7"></a><span class="kw">library</span>(quantmod)</span>
+<span id="cb7-8"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-8"></a></span>
+<span id="cb7-9"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-9"></a></span>
+<span id="cb7-10"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-10"></a><span class="co">### Leer datos</span></span>
+<span id="cb7-11"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-11"></a>ibex=<span class="kw">getSymbols</span>(<span class="st">&quot;^ibex&quot;</span>,<span class="dt">env=</span><span class="ot">NULL</span>)</span>
+<span id="cb7-12"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-12"></a>ibex=<span class="kw">na.omit</span>(ibex)</span>
+<span id="cb7-13"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-13"></a><span class="co">#crear XTS </span></span>
+<span id="cb7-14"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-14"></a>mData=ibex<span class="op">$</span>IBEX.Adjusted</span>
+<span id="cb7-15"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-15"></a><span class="kw">colnames</span>(mData)=<span class="kw">c</span>(<span class="st">&quot;Close&quot;</span>)</span>
+<span id="cb7-16"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-16"></a></span>
+<span id="cb7-17"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-17"></a><span class="co">#crear XTS semanal</span></span>
+<span id="cb7-18"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-18"></a>semanal=<span class="cf">function</span>(mData){</span>
+<span id="cb7-19"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-19"></a>  aa=<span class="kw">seq.Date</span>(<span class="kw">as.Date</span>(<span class="kw">min</span>(<span class="kw">index</span>(mData))),<span class="dt">length.out=</span><span class="dv">2</span><span class="op">+</span><span class="kw">as.numeric</span>(<span class="kw">as.Date</span>(<span class="kw">max</span>(<span class="kw">index</span>(mData)))<span class="op">-</span><span class="kw">as.Date</span>(<span class="kw">min</span>(<span class="kw">index</span>(mData)))),<span class="dt">by=</span><span class="st">&quot;1 days&quot;</span>)</span>
+<span id="cb7-20"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-20"></a>  bb=<span class="kw">xts</span>(<span class="kw">rep</span>(<span class="ot">NA</span>,<span class="kw">length</span>(aa)),aa)</span>
+<span id="cb7-21"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-21"></a>  cc=bb[<span class="kw">time</span>(bb[<span class="kw">.indexwday</span>(bb)<span class="op">==</span><span class="dv">5</span>])]</span>
+<span id="cb7-22"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-22"></a>  dd=<span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span>(<span class="kw">length</span>(cc)<span class="op">-</span><span class="dv">1</span>), <span class="cf">function</span>(x) <span class="kw">last</span>(mData[<span class="kw">seq.Date</span>(<span class="kw">as.Date</span>(<span class="kw">time</span>(cc[x])),<span class="kw">as.Date</span>(<span class="kw">time</span>(cc[x<span class="op">+</span><span class="dv">1</span>])),<span class="dv">1</span>)]))</span>
+<span id="cb7-23"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-23"></a>  <span class="kw">coredata</span>(cc[<span class="dv">2</span><span class="op">:</span>(<span class="kw">length</span>(cc))])=dd</span>
+<span id="cb7-24"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-24"></a>  <span class="kw">return</span>(cc)</span>
+<span id="cb7-25"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-25"></a>}</span>
+<span id="cb7-26"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-26"></a></span>
+<span id="cb7-27"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-27"></a></span>
+<span id="cb7-28"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-28"></a>mDataLR=<span class="kw">semanal</span>(mData)</span>
+<span id="cb7-29"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-29"></a><span class="co">#Añadir Rentabilidad</span></span>
+<span id="cb7-30"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-30"></a><span class="kw">colnames</span>(mDataLR)=<span class="kw">c</span>(<span class="st">&quot;Close&quot;</span>)</span>
+<span id="cb7-31"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-31"></a><span class="co">#</span></span>
+<span id="cb7-32"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-32"></a>mDataLR<span class="op">$</span>Rentabilidad &lt;-<span class="st"> </span><span class="kw">log</span>(mDataLR<span class="op">$</span>Close) <span class="op">-</span><span class="st"> </span><span class="kw">lag</span>(<span class="kw">log</span>(mDataLR<span class="op">$</span>Close),<span class="dt">k=</span><span class="dv">2</span>)</span>
+<span id="cb7-33"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-33"></a><span class="co">#elimnar NAs</span></span>
+<span id="cb7-34"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-34"></a>mDataLR &lt;-<span class="st"> </span><span class="kw">na.exclude</span>(mDataLR)</span>
+<span id="cb7-35"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-35"></a></span>
+<span id="cb7-36"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-36"></a><span class="co">#Transformar XTS en DF</span></span>
+<span id="cb7-37"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-37"></a>mDataLRdf &lt;-<span class="st"> </span><span class="kw">data.frame</span>(mDataLR)</span>
+<span id="cb7-38"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-38"></a><span class="co">#Poner la fecha que esta en el nombre de la fila como columna de fecha con formato</span></span>
+<span id="cb7-39"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-39"></a>mDataLRdf<span class="op">$</span>Date &lt;-<span class="kw">as.Date</span>(<span class="kw">row.names</span>(mDataLRdf),<span class="st">&quot;%Y-%m-%d&quot;</span>)</span>
+<span id="cb7-40"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-40"></a></span>
+<span id="cb7-41"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-41"></a></span>
+<span id="cb7-42"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-42"></a><span class="co">#definir modelo HHM de markov con 2 estados. Rentabilidad en función de la constante</span></span>
+<span id="cb7-43"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-43"></a>mod &lt;-<span class="st"> </span><span class="kw">depmix</span>(Rentabilidad <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">family =</span> <span class="kw">gaussian</span>(), <span class="dt">nstates =</span> <span class="dv">2</span>, <span class="dt">data =</span> mDataLR)</span>
+<span id="cb7-44"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-44"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb7-45"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-45"></a></span>
+<span id="cb7-46"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-46"></a><span class="co"># Estimar</span></span>
+<span id="cb7-47"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-47"></a>fm2 &lt;-<span class="st"> </span><span class="kw">fit</span>(mod, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb7-48"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-48"></a><span class="co">#Resumen de resultados</span></span>
+<span id="cb7-49"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-49"></a><span class="kw">summary</span>(fm2)</span>
+<span id="cb7-50"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-50"></a><span class="kw">print</span>(fm2)</span>
+<span id="cb7-51"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-51"></a></span>
+<span id="cb7-52"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-52"></a><span class="co"># Compute probability of being in each state</span></span>
+<span id="cb7-53"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-53"></a>probs &lt;-<span class="st"> </span><span class="kw">posterior</span>(fm2)             </span>
+<span id="cb7-54"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-54"></a>mDataLRdf<span class="op">$</span>pBull &lt;-<span class="st"> </span>probs[,<span class="dv">2</span>]  </span>
+<span id="cb7-55"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-55"></a>mDataLRdf<span class="op">$</span>pBear &lt;-<span class="st"> </span>probs[,<span class="dv">3</span>]</span>
+<span id="cb7-56"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-56"></a>mDataLRdf<span class="op">$</span>pState &lt;-<span class="st"> </span>probs[,<span class="dv">1</span>]</span>
+<span id="cb7-57"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-57"></a></span>
+<span id="cb7-58"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-58"></a><span class="co">#Nombre a la Primera columna</span></span>
+<span id="cb7-59"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-59"></a><span class="co">#colnames(mDataLRdf$logret)=c(&quot;Rentabilidad&quot;)</span></span>
+<span id="cb7-60"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-60"></a><span class="kw">colnames</span>(mDataLRdf)[<span class="dv">1</span>]=nameStock</span>
+<span id="cb7-61"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-61"></a></span>
+<span id="cb7-62"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-62"></a></span>
+<span id="cb7-63"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-63"></a><span class="co">#Crear df para ggplot2</span></span>
+<span id="cb7-64"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-64"></a>df &lt;-<span class="st"> </span><span class="kw">melt</span>(mDataLRdf[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)],<span class="dt">id=</span><span class="st">&quot;Date&quot;</span>,<span class="dt">measure=</span><span class="kw">c</span>(nameStock,<span class="st">&quot;Rentabilidad&quot;</span>,<span class="st">&quot;pBull&quot;</span>,<span class="st">&quot;pBear&quot;</span>,<span class="st">&quot;pState&quot;</span>))</span>
+<span id="cb7-65"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-65"></a></span>
+<span id="cb7-66"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-66"></a></span>
+<span id="cb7-67"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-67"></a><span class="co">##Gráfico Probabilidad</span></span>
+<span id="cb7-68"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-68"></a>positivoColor=<span class="kw">subset</span>(df,df<span class="op">$</span>variable <span class="op">==</span><span class="st">&quot;Rentabilidad&quot;</span>)</span>
+<span id="cb7-69"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-69"></a>pColor=<span class="kw">ifelse</span>(positivoColor<span class="op">$</span>value <span class="op">&gt;=</span><span class="dv">0</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb7-70"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-70"></a>f &lt;-<span class="st"> </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb7-71"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-71"></a><span class="st">  </span><span class="kw">geom_step</span>(<span class="dt">data=</span><span class="kw">subset</span>(df,df<span class="op">$</span>variable <span class="op">==</span>nameStock),<span class="kw">aes</span>(Date, value))<span class="op">+</span></span>
+<span id="cb7-72"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-72"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span>positivoColor,<span class="kw">aes</span>(Date, value,<span class="dt">ymin=</span><span class="dv">0</span>,<span class="dt">ymax=</span>value),<span class="dt">color =</span> pColor)<span class="op">+</span></span>
+<span id="cb7-73"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-73"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span><span class="kw">subset</span>(df,df<span class="op">$</span>variable <span class="op">==</span><span class="st">&quot;pBull&quot;</span>),<span class="kw">aes</span>(Date, value,<span class="dt">ymin=</span><span class="dv">0</span>,<span class="dt">ymax=</span>value),<span class="dt">color=</span><span class="st">&quot;cornflowerblue&quot;</span>)<span class="op">+</span></span>
+<span id="cb7-74"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-74"></a><span class="st">  </span><span class="kw">facet_grid</span>(variable <span class="op">~</span>., <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="dt">as.table =</span> <span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-75"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-75"></a><span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&quot;1 years&quot;</span>,<span class="dt">date_labels =</span> <span class="st">&quot;%y&quot;</span>)<span class="op">+</span></span>
+<span id="cb7-76"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-76"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-77"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-77"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.spacing =</span> <span class="kw">unit</span>(<span class="dv">0</span>,<span class="st">&quot;lines&quot;</span>), <span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb7-78"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-78"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb7-79"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-79"></a>        <span class="dt">strip.background =</span> <span class="kw">element_rect</span>(<span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>))<span class="op">+</span></span>
+<span id="cb7-80"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-80"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Grafico de Estados&quot;</span>)</span>
+<span id="cb7-81"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-81"></a></span>
+<span id="cb7-82"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-82"></a>f </span>
+<span id="cb7-83"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-83"></a></span>
+<span id="cb7-84"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-84"></a><span class="co">#####ESTADOs</span></span>
+<span id="cb7-85"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-85"></a>f &lt;-<span class="st"> </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb7-86"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-86"></a><span class="st">  </span><span class="kw">geom_step</span>(<span class="dt">data=</span><span class="kw">subset</span>(df,df<span class="op">$</span>variable <span class="op">==</span>nameStock),<span class="kw">aes</span>(Date, value))<span class="op">+</span></span>
+<span id="cb7-87"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-87"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span>positivoColor,<span class="kw">aes</span>(Date, value,<span class="dt">ymin=</span><span class="dv">0</span>,<span class="dt">ymax=</span>value),<span class="dt">color =</span> pColor)<span class="op">+</span></span>
+<span id="cb7-88"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-88"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span><span class="kw">subset</span>(df,df<span class="op">$</span>variable <span class="op">==</span><span class="st">&quot;pBull&quot;</span>),<span class="kw">aes</span>(Date, value,<span class="dt">ymin=</span><span class="dv">0</span>,<span class="dt">ymax=</span>value),<span class="dt">color=</span><span class="st">&quot;cornflowerblue&quot;</span>)<span class="op">+</span></span>
+<span id="cb7-89"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-89"></a><span class="st">  </span><span class="kw">geom_step</span>(<span class="dt">data=</span><span class="kw">subset</span>(df,df<span class="op">$</span>variable <span class="op">==</span><span class="st">&quot;pState&quot;</span>),<span class="kw">aes</span>(Date, <span class="dv">2</span><span class="op">-</span>value),<span class="dt">color=</span><span class="st">&quot;cornflowerblue&quot;</span>,<span class="dt">size=</span><span class="dv">1</span>)<span class="op">+</span></span>
+<span id="cb7-90"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-90"></a><span class="st">  </span><span class="kw">facet_grid</span>(variable <span class="op">~</span>., <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="dt">as.table =</span> <span class="ot">TRUE</span>) <span class="op">+</span><span class="st">   </span></span>
+<span id="cb7-91"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-91"></a><span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&quot;1 years&quot;</span>,<span class="dt">date_labels =</span> <span class="st">&quot;%y&quot;</span>)<span class="op">+</span></span>
+<span id="cb7-92"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-92"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-93"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-93"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.spacing =</span> <span class="kw">unit</span>(<span class="dv">0</span>,<span class="st">&quot;lines&quot;</span>), <span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb7-94"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-94"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb7-95"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-95"></a>        <span class="dt">strip.background =</span> <span class="kw">element_rect</span>(<span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>))<span class="op">+</span></span>
+<span id="cb7-96"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-96"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Ciclos del IBEX35: Alcista vs Bajista&quot;</span>)<span class="op">+</span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Ibex35 Hidden Markov Model two states: rentabilidades quincenales&quot;</span>)</span>
+<span id="cb7-97"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-97"></a></span>
+<span id="cb7-98"><a href="cambio-de-regimen-hidden-markov-models-regime-switching.html#cb7-98"></a>f </span></code></pre></div>
+
+</div>
+</div>
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="cointegración.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

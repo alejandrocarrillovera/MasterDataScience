@@ -1,0 +1,376 @@
+---
+title: "Pájaros Bumpus"
+author: "Miguel López Garralón"
+date: "21/11/2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Objetivo
+
+El objetivo de esta investigación es averiguar si existe una estructura subyacente común a las distintas características de los pájaros estudiados, de forma que en lugar de tener que trabajar con 9 variables diferentes, se pueda reducir dicha dimensión a un número menor. Para ello se llevará acabo un análisis de componentes principales.
+Tras esto, para poder clasificar los pájaros en función de dichas características, se realizará un análisis cluster, de forma que se pueda determinar una división en un número de grupos concreto.
+
+# Hipótesis
+
+El análisis de componentes principales mostrará que existe una estructura que se encuentra latente tras las variables recogidas de los pájaros. Por lo que podrá reducirse la dimensión del número de variables.
+
+
+
+```{r message = FALSE, results = 'hide'}
+library(haven)
+library(corrplot)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(skimr)
+library(readr)
+library(factoextra)
+library(FactoMineR)
+library(cluster)
+```
+
+```{r}
+bumpus <- read_table2("data/bumpus.txt",
+                      col_types = cols(survive = col_factor(levels = c("0", "1"))))
+```
+
+```{r}
+names(bumpus) <- c('sobrevive', 'longitud', 'extension_alas', 'peso',
+                     'long_pico_cabeza', 'long_humero', 'long_femur', 'long_tibia',
+                     'ancho_craneo', 'long_quilla_esternon')
+```
+
+
+```{r}
+skim(bumpus)
+```
+
+No será necesario tratar valores perdidos, ya que no hay ninguno.
+
+# Análisis exploratorio de los datos
+
+Se realizarán análisis de correlación e histogramas, así como la relación que existe entre las distintas características de los pájaros y si han sobrevivido o no. De esta forma podremos empezar a ver si los análisis planteados son adecuados o no.
+
+## Correlación
+
+
+```{r}
+correlacion <- round(cor(bumpus[-1]), 1)
+
+corrplot(correlacion, method = "number", type = "upper")
+```
+
+La matriz y el gráfico de correlación muestran que las variables numéricas no tienen unos valores muy altos de correlación entre ellas, llegando incluso a no ser significativas entre ellas. 
+
+
+```{r matriz correlacion}
+matriz_correlaciones <- cor(bumpus[-1],
+                            use = "pairwise.complete.obs")
+matriz_correlaciones
+```
+
+
+```{r}
+par(mfrow = c(2,2))
+hist(bumpus$longitud, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Longitud total", 
+     main = "Distribución de la longitud total") 
+    curve(dnorm(x, mean = mean(bumpus$longitud),
+                sd = sqrt(var(bumpus$longitud))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+hist(bumpus$extension_alas, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Envergadura", 
+     main = "Distribución de la envergadura") 
+    curve(dnorm(x, mean = mean(bumpus$extension_alas),
+                sd = sqrt(var(bumpus$extension_alas))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+hist(bumpus$peso, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Peso", 
+     main = "Distribución del peso") 
+    curve(dnorm(x, mean = mean(bumpus$peso),
+                sd = sqrt(var(bumpus$peso))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+hist(bumpus$long_pico_cabeza, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Longitud del pico y cabeza", 
+     main = "Distribución de la longitud del pico y la cabeza") 
+    curve(dnorm(x, mean = mean(bumpus$long_pico_cabeza),
+                sd = sqrt(var(bumpus$long_pico_cabeza))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+```
+
+
+```{r}
+par(mfrow = c(2,2))
+hist(bumpus$long_humero, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Longitud del húmero", 
+     main = "Distribución de la longitud del húmero") 
+    curve(dnorm(x, mean = mean(bumpus$long_humero),
+                sd = sqrt(var(bumpus$long_humero))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+hist(bumpus$long_femur, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Longitud fémur", 
+     main = "Distribución de la longitud del fémur") 
+    curve(dnorm(x, mean = mean(bumpus$long_femur),
+                sd = sqrt(var(bumpus$long_femur))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+hist(bumpus$long_tibia, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Longitud de la tibia", 
+     main = "Distribución de la longitud de la tibia") 
+    curve(dnorm(x, mean = mean(bumpus$long_tibia),
+                sd = sqrt(var(bumpus$long_tibia))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+hist(bumpus$ancho_craneo, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Ancho del cráneo", 
+     main = "Distribución del ancho del cráneo") 
+    curve(dnorm(x, mean = mean(bumpus$ancho_craneo),
+                sd = sqrt(var(bumpus$ancho_craneo))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+```
+
+```{r}
+hist(bumpus$long_quilla_esternon, density = 20, breaks = 10, prob = TRUE, 
+     xlab = "Longitud de la quilla del esternon", 
+     main = "Distribución de la longitud de la quilla del esternón") 
+    curve(dnorm(x, mean = mean(bumpus$long_quilla_esternon),
+                sd = sqrt(var(bumpus$long_quilla_esternon))),
+      col = "darkblue", lwd = 2, add = TRUE, yaxt = "n")
+```
+
+Se puede observar que los histogramas de las características de los pájaros no siguen una distribución normal, y, además, los valores están bastante repartidos, aunque en algunos casos se da una alta concentración en alguno de ellos.
+
+```{r}
+pairs(bumpus[2:5], main = "relación entre supervivencia y características",
+      pch = 21,
+      bg = c("red", "green")[unclass(bumpus$sobrevive)])
+```
+
+
+```{r}
+pairs(bumpus[6:10], main = "relación entre supervivencia y características",
+      pch = 21,
+      bg = c("red", "green")[unclass(bumpus$sobrevive)])
+```
+
+En cuanto a la relación entre la supervivencia de los pájaros y sus características, se puede observar que no se produce una división clara entre los pájaros que sobreviven y no en función de cada características. Viendo estos gráficos podemos pensar que el análisis cluster puede ser más complejo o inadecuado de lo que se pensaba en un primer momento.
+
+
+### Escalado de las variables
+
+Para llevar a cabo el análisis de componentes principales y, más adelante, el cluster, se realiza la estandarización de las variables numéricas para facilitar la interpretación.
+
+```{r}
+bumpus2 = scale(bumpus[-1])
+bumpus2 <- as.data.frame(bumpus2)
+```
+
+
+```{r}
+bumpus2$sobrevive <- bumpus$sobrevive
+bumpus2
+```
+
+
+```{r}
+skim(bumpus2)
+```
+
+# Análisis de componentes principales
+
+Para saber si es adecuado realizar un análisis de componentes principales, primero hay que realizar una serie de análisis o test que corroboren que se puede llevar a cabo dicho análisis.
+
+## Determinante de la matriz de correlaciones
+
+```{r determinante matriz corr}
+det(matriz_correlaciones)
+```
+
+El determinante de la matriz de correlaciones muestra un resultado de 0.047, por lo que indica que existe alta multicolinealidad entre las variables. Este dato, junto a la alta correlación de las variables sugieren que un Análisis de Componentes Principales puede ser realizado. Para poder corroborar esto se realizan también las pruebas de esfericidad de Bartlett y KMO.
+
+
+## KMO
+
+
+En el KMO, se obtiene un valor de 0.8. Al ser este valor cercano a 1 y superior a 0.8 podemos afirmar, junto con las pruebas realizadas anteriormente, que es conveniente llevar a cabo un Análisis de Componentes Principales para las variables que nos encontramos en la base de datos. A pesar de ello, se procede a eliminar del análisis la variable de la longitud del pico y cabeza, ya que tiene un MSA de 0.44, siendo éste muy inferior a los demás.
+
+
+```{r}
+library(psych) # KMO
+KMO(bumpus2[,1:9])
+```
+
+```{r}
+bumpus3 <- dplyr::select(bumpus2, c(-sobrevive, -long_pico_cabeza))
+```
+
+
+```{r KMO}
+KMO(bumpus3)
+```
+
+Se llevará a cabo el ACP con todas las variables a excepción de la supervivencia y la longitud del pico y la cabeza.
+
+
+```{r}
+acp_bumpus <- PCA(bumpus3, graph = T)
+```
+
+Según se ve en el gráfico, en el que se divide en dos dimensiones, la dimensión 1 explica un 45.75 % de la varianza, mientras la segunda dimensión explica un 14.23 % de la varianza. Por tanto, hay dos atributos (provenientes de las 8 variables numéricas) que explican el 59.98 % de la varianza. Estas dos dimensiones explican casi el 60% de la varianza, por lo tanto seguramente debamos seleccionar más de dos dimensiones para poder obtener un mayor porcentaje explicado.
+
+Se puede ver una primera división bastante clara en el eje vertical. En la parte superior se encuentran la longitud total, el ancho de cráneo y el peso, mientras en la parte inferior se sitúan el resto de variables, que hacer referencia principalmente a las longitudes de ciertas partes del cuerpo de los pájaros.
+
+
+```{r autovalores}
+acp_bumpus$eig
+```
+
+Para complementar estos gráficos, se muestra a continuación el gráfico de sedimentación. A través de este gráfico, y en consonancia con la tabla anterior, se decide finalmente que el número de componentes seleccionados será de dos, ya que a partir del tercer componente los eigenvalues se encuentran por debajo de 1.
+
+
+```{r}
+fviz_eig(acp_bumpus, addlables = TRUE, hjust = -0.3) +
+  labs(title = 'Scree plot / Gráfico de sedimentación',
+       x = 'Dimensiones', y = '% Varianza explicada') +
+  theme_minimal()
+
+```
+
+
+## Contribución de las variables a cada dimensión
+
+```{r contribución variables}
+acp_bumpus$var$contrib[,1:2]
+```
+
+### Contribución de las variables a la dimensión 1
+
+```{r}
+fviz_contrib(acp_bumpus, choice="var", axes = 1 )+
+        labs(title = "Contribuciones a la Dimensión 1")
+```
+
+
+En este gráfico observamos cómo contribuye cada variable la dimensión 1. Se puede apreciar que las variables que más contribuyen son las relacionadas con la longitud del fémur, húmero, tibia y la extensión de las alas.
+
+
+### Contribución de las variables a la dimensión 2
+
+```{r dimension 2}
+fviz_contrib(acp_bumpus, choice="var", axes = 2 )+
+        labs(title = "Contribuciones a la Dimensión 2")
+```
+
+En cuanto a la segunda dimensión, hay una variable que representa la mayor contribución de todas, que es la longitud total.
+
+## Comunalidades
+
+En el gráfico de comunalidades se ve lo explicadas que quedan las distintas características en cada una de las dimensiones. Se puede apreciar como la primera es la que más representa a las distintas variables, mientras en la segunda dimensión están muy poco representadas.
+
+
+```{r}
+corrplot(acp_bumpus$var$cos2[,1:2], is.corr = F)
+```
+
+
+
+# Rotación VARIMAX
+
+Se realiza una rotación varimax para facilitar la interpretación de las dimensiones.
+Como se mostraba en los primeros gráficos del análisis de componentes principales, la segunda dimensión está principalmente representada por la longitud total, el peso y el ancho del cráneo, mientras la primera dimensión lo está en mayor medida por el resto de las características.
+
+```{r}
+library(stats) # varimax
+varimax(acp_bumpus$var$cor[,1:2])
+```
+
+
+# Cluster
+
+Pasamos a continuación a clasificar los pájaros en función de sus características (variables numéricas).
+
+```{r}
+q.dist <- get_dist(bumpus2[,1:9], method = "pearson") 
+```
+
+En el siguiente gráfico podemos apreciar que los colores azules muestran una aproximación mayor entre los pájaros a los que representa dicho espacio, mientras el color rojo representa una mayor distancia. Se puede observar que hay ambos colores en el gráfico, por lo que podría establecerse una clasificación en función a ello.
+
+```{r}
+fviz_dist(q.dist, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"), lab_size = 7)
+```
+
+
+```{r}
+bumpus2.cor <- cor(t(bumpus2[,-10]), method = "pearson") 
+round(bumpus2.cor[1:56, 1:56], 2)
+
+```
+
+
+```{r}
+dist.eucl <- daisy(bumpus2[-10], metric = c("euclidean"),stand = FALSE)
+```
+
+
+```{r}
+corrplot(as.matrix(dist.eucl), is.corr = FALSE, method = "color", type="lower", diag=F, order="hclust", tl.cex=0.6, tl.col="blue")
+
+```
+
+Este segundo gráfico muestra lo mismo que el comentado anteriormente, pero sin doblar los casos. Los colores más oscuros muestran que hay una mayor distancia, mientras los más claros que se encuentran más cercanos. 
+
+
+```{r}
+plot(hclust(dist.eucl, method = "ward.D2"), cex=0.7, main="Dendrograma", ylab="Anchura", xlab="Análisis cluster aplicando Ward sobre matriz de distancias euclídeas")
+
+```
+
+A través del dendograma, se puede apreciar que existe una primera división clara en dos grupos, dejando un grupo más pequeño de casos a la izquierda, y uno mayor a la derecha.
+Para saber cuál es el número óptimo de clusters se debe observar el siguiente gráfico, en el cual, el mayor ángulo entre un punto y otro se produce en el segundo caso, por lo que el número que se escogerá para la división en clusters será de dos.
+
+
+
+```{r}
+fviz_nbclust(x = bumpus2[-10], FUNcluster = kmeans, method = "wss", k.max = 15, 
+             diss = get_dist(bumpus2[-10], method = "euclidean"), nstart = 50)
+```
+
+En el gráfico que aparece a continuación, se ve cómo quedan separados los dos cluster, y la asignación de cada pájaro a uno de los dos cluster.
+
+```{r}
+bumpus.eclust <- eclust(bumpus2[,-10], FUNcluster = "kmeans", stand=TRUE, hc_metric="euclidean", nstart=25, k = 2)
+ 
+```
+
+A pesar de que se puede observar una clara división, vemos como en el siguiente gráfico el análisis cluster realizado no es todo lo bueno que se podría llegar a esperar. Esto, se puede deber entre otras cosas al escaso número de registros, pero ya en el análisis exploratorio se empezó a intuir que la clasificación mediante el análisis cluster no sería excesivamente buena, sin embargo, se ha podido realizar la división en dos grupos claramente diferenciados.
+
+```{r}
+fviz_silhouette(bumpus.eclust)
+```
+
+
+```{r}
+bumpus.eclust$nbclust
+```
+
+
+```{r}
+clusters.bumpus <- data.frame(cluster = bumpus.eclust$cluster,
+                              sobrevive = bumpus2$sobrevive)
+clusters.bumpus$cluster <- as.factor(clusters.bumpus$cluster)
+
+table(clusters.bumpus$cluster, clusters.bumpus$sobrevive)
+```
+
+Por último, se ha realizado una tabla en la que se compara la supervivencia de los pájaros en función del cluster al que pertenecen. Se puede pensar a primera vista que no hay una gran diferencia entre ambos grupos debido a la escasez de los datos, sin embargo se advierte que el segundo cluster tiene casi un 50% más de casos que no sobrevivieron en comparación al primer cluster.
+
+
+
+
+
+

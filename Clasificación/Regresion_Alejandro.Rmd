@@ -1,0 +1,198 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+
+library(readxl)
+library(tibble)
+library(caTools)
+library(skimr)
+
+
+datos <- EPF2018_segurosalud
+
+
+```
+
+
+```{r}
+
+
+
+# Eliminamos variables que o son reelevantes para el estudio
+
+datos <- datos[,c(-1, -2,-6, -10, -12, -13)]
+
+
+
+```
+
+
+```{r}
+
+summary(datos)
+
+
+
+```
+```{r}
+
+#Pasamos a tipo as.numeric los datos, porque estaban en tipo character.
+
+datos$Seguro_salud<- as.numeric(datos$Seguro_salud)
+
+datos$TAMAMU<- as.numeric(datos$TAMAMU)
+
+datos$NMIEMB <- as.numeric(datos$NMIEMB)
+
+datos$NUMOCUP <- as.numeric(datos$NUMOCUP)
+
+datos$TIPHOGAR3 <- as.numeric(datos$TIPHOGAR3)
+
+datos$EDADSP <- as.numeric(datos$EDADSP)
+
+datos$ESTUDREDSP<- as.numeric(datos$ESTUDREDSP)
+
+datos$REGTEN <- as.numeric(datos$REGTEN)
+
+datos$SUPERF <- as.numeric(datos$SUPERF)
+
+datos$INTERIN <- as.numeric(datos$INTERIN)
+
+
+summary(datos)
+skim(datos)
+```
+
+
+```{r}
+#### Modelo de Regresion Linar #####
+
+
+#Comprobamos el tamaño del train (14.976 observaciones) y del test (6.418 observaciones)
+
+str(datos)
+
+size <- floor(nrow(datos) * 0.7)
+
+size2 <- floor(nrow(datos) * 0.3)
+
+
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+
+set.seed(24112019)
+
+train_ind <- sample(seq_len(nrow(datos)), size = size)
+
+training.set <- datos[train_ind, ]
+
+test.set <- datos[-train_ind, ]
+
+```
+
+```{r}
+
+# Vemos la distribucion de ambas muestras y comprobamos que están balanceadas
+
+table(training.set$Seguro_salud)
+
+table(test.set$Seguro_salud)
+
+#Observamos que la muestra esta balanceada
+
+# 90% No y 10% Si, en el train y el test
+
+```
+
+
+
+```{r}
+# Vemos la estructura de la variable class en cada uno de los data frame obtenidos
+
+table(training.set$Seguro_salud)
+
+table(test.set$Seguro_salud)
+
+```
+
+
+
+```{r}
+
+modelo01 <- glm(Seguro_salud ~ ., family = 'binomial'(link = 'logit'), data = training.set)
+
+summary(modelo01)
+
+exp(coef(modelo01))  # Observamos los coeficientes
+
+
+
+```
+
+
+```{r}
+#Test Anova
+
+anova(modelo01, test = "Chisq")
+```
+
+
+```{r}
+# Ahora los resultados son consistentes y ya no dependen
+# en su nivel de agregación (tabulación). He notificado al responsable del paquete pscl. Quizás tenga algo de interés.
+
+
+
+str(test.set)
+str(training.set)
+
+
+```
+
+
+
+```{r}
+
+fitted.results <- predict(modelo01, newdata = test.set, type = 'response')
+
+fitted.results <- ifelse(fitted.results > 0.68, 1,0)
+
+
+```
+
+
+```{r}
+
+
+logit.perf <- table(test.set$Seguro_salud, fitted.results, dnn = c("Actual", "Predicted"))
+logit.perf
+
+
+       
+
+
+
+```
+
+ 
+```{r}
+#Calculamos el Accuracy
+
+misClasificError <- mean(fitted.results != test.set$Seguro_salud)
+print(paste('Accuracy',1-misClasificError)) 
+```
+
